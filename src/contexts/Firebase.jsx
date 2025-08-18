@@ -1,6 +1,7 @@
 import { createContext, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import {getAuth , createUserWithEmailAndPassword} from 'firebase/auth'
 
 export const Firebasecontext=createContext()
 
@@ -15,15 +16,32 @@ const firebaseConfig = {
   };
 
 const app = initializeApp(firebaseConfig);
+const firebaseauth=getAuth(app)
+
+
 const analytics = getAnalytics(app);
 
 export const FirebaseProvider=({children})=>{
     const [name, setname] = useState("kartik")
 
+    const signup_mailpass=async (email,password)=>{
+        try {
+            let userdata= await createUserWithEmailAndPassword(firebaseauth,email,password)
+            return userdata
+            
+        } catch (error) {
+            console.log("error occured",error);
+            return null
+            
+            
+        }
+
+    }
+
 
 
     return (
-        <Firebasecontext.Provider value={{name,setname}} >
+        <Firebasecontext.Provider value={{name,setname, signup_mailpass}} >
             {children}
 
         </Firebasecontext.Provider>
