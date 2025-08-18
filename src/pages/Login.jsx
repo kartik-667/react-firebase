@@ -1,10 +1,13 @@
-import React, { useContext, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { Firebasecontext } from '../contexts/Firebase'
+
 function Login() {
 
-    const {login_mailpass}=useContext(Firebasecontext)
+    const {login_mailpass, login_google, isLoggedIn}=useContext(Firebasecontext)
+    const navigate=useNavigate()
     // console.log(signup_mailpass);
+    
 
 
       const [email, setemail] = useState("")
@@ -45,6 +48,30 @@ function Login() {
 
       }
 
+      const handleGooglelogin=async ()=>{
+        seterror("")
+        console.log('google login initiated');
+        
+        try {
+            const user=await login_google()
+            console.log("google user is", user.user);
+            
+          
+        } catch (error) {
+          console.log('error occured',error);
+          seterror(error)
+          
+          
+        }
+
+      }
+
+      useEffect(()=>{
+        if(isLoggedIn) 
+          navigate("/")
+
+      },[navigate,isLoggedIn])
+
     
     
     
@@ -83,6 +110,8 @@ function Login() {
             <button type="submit" className="login-button">
               Login
             </button>
+
+            <button  onClick={handleGooglelogin}>SignIn with GOOGLE</button>
           </form>
     
           <p className="login-link">

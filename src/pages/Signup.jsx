@@ -1,9 +1,11 @@
-import React, { useContext, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { Firebasecontext } from '../contexts/Firebase'
+
 function Signup() {
 
-    const {signup_mailpass}=useContext(Firebasecontext)
+    const {signup_mailpass, isLoggedIn}=useContext(Firebasecontext)
+    const navigate=useNavigate()
     // console.log(signup_mailpass);
 
     
@@ -36,13 +38,11 @@ function Signup() {
       }
 
     
-    //   const handleChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setFormData({
-    //       ...formData,
-    //       [name]: value,
-    //     });
-    //   };
+      useEffect(()=>{
+        if(isLoggedIn) 
+          navigate("/")
+
+      },[navigate,isLoggedIn])
     
       return (
         <div className="signup-container">
