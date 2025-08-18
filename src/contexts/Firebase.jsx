@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import {getAuth , createUserWithEmailAndPassword} from 'firebase/auth'
+import {getAuth , createUserWithEmailAndPassword, signInWithEmailAndPassword} from 'firebase/auth'
 
 export const Firebasecontext=createContext()
 
@@ -31,7 +31,20 @@ export const FirebaseProvider=({children})=>{
             
         } catch (error) {
             console.log("error occured",error);
-            return null
+            
+            
+            
+        }
+
+    }
+
+    const login_mailpass=async (email, password)=>{
+        try {
+            let user=await signInWithEmailAndPassword(firebaseauth,email,password)
+            return user
+            
+        } catch (error) {
+            console.log("error occured",error);
             
             
         }
@@ -41,7 +54,7 @@ export const FirebaseProvider=({children})=>{
 
 
     return (
-        <Firebasecontext.Provider value={{name,setname, signup_mailpass}} >
+        <Firebasecontext.Provider value={{name,setname, signup_mailpass, login_mailpass}} >
             {children}
 
         </Firebasecontext.Provider>
