@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import {getAuth , createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged} from 'firebase/auth'
+import {getAuth , createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut} from 'firebase/auth'
 
 export const Firebasecontext=createContext()
 
@@ -86,10 +86,22 @@ export const FirebaseProvider=({children})=>{
         }
     }
 
+    const logout=async ()=>{
+        try {
+            await signOut(firebaseauth)
+            
+        } catch (error) {
+            console.log("error occured",error);
+            
+            
+        }
+        
+    }
+
 
 
     return (
-        <Firebasecontext.Provider value={{name,setname, signup_mailpass, login_mailpass, login_google, isLoggedIn}} >
+        <Firebasecontext.Provider value={{name,setname, signup_mailpass, login_mailpass, login_google, isLoggedIn, currUser, logout}} >
             {children}
 
         </Firebasecontext.Provider>
