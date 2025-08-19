@@ -4,8 +4,10 @@ import { Route, Routes, Link, useNavigate } from 'react-router-dom'
 import Page1 from './pages/Page1'
 import Signup from './pages/Signup'
 import Login from './pages/Login'
+import Navbar from './components/Navbar'
+import List from './pages/List'
 function App() {
-  const {name,setname, isLoggedIn}=useContext(Firebasecontext)
+  const {name,setname, isLoggedIn , currUser}=useContext(Firebasecontext)
 
   
 
@@ -14,12 +16,13 @@ function App() {
       
 
       
-
+      <Navbar/>
       <Routes>
       <Route path='/' element={<Home></Home>}></Route>
       <Route path='/page1' element={<Page1></Page1>} > </Route>
       <Route path='/signup' element={<Signup></Signup>}></Route>
       <Route path='/login' element={<Login></Login>}></Route>
+      <Route path='/addlist' element={<List></List>}></Route>
 
       </Routes>
 
@@ -31,7 +34,7 @@ function App() {
 }
 
 function Home(){
-  const { isLoggedIn, logout}=useContext(Firebasecontext)
+  const { isLoggedIn, logout, currUser}=useContext(Firebasecontext)
   const navigate=useNavigate()
 
   const handleLogout=()=>{
@@ -43,9 +46,13 @@ function Home(){
   }
 
   return (
+    
     <>
       <div>
-        <h1>Home page </h1>
+        <h1 className='text-red-500 text-3xl'>Home page </h1>
+        {currUser && (
+          <h1 className='text-4xl'>Hello {currUser.displayName}</h1>
+        )}
         {isLoggedIn && (
           <button onClick={handleLogout}>Logout</button>
         )}

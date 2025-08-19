@@ -3,6 +3,8 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import {getAuth , createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut} from 'firebase/auth'
 
+import {getFirestore, collection, addDoc} from 'firebase/firestore'
+
 export const Firebasecontext=createContext()
 
 const firebaseConfig = {
@@ -17,6 +19,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const firebaseauth=getAuth(app)
+const firebase=getFirestore(app)
 
 
 const analytics = getAnalytics(app);
@@ -39,6 +42,30 @@ export const FirebaseProvider=({children})=>{
     }, []) // means on load
     
     const isLoggedIn= currUser ? true : false;
+
+    const createNewList=async ({name,isbn,price})=>{
+        try {
+            console.log('curr user is',currUser);
+            
+            const newdoc=await addDoc(collection(firebase,"lists"),{
+                name,
+                isbn,
+                price,
+                userid:currUser.uid,
+                usermail:currUser.email,
+                displayname:currUser.displayName
+                
+            })
+            if(newdoc) console.log('new doc made with id',newdoc);
+            
+
+            
+        } catch (error) {
+            console.log('error adding new doc ',error);
+            
+            
+        }
+    }
 
     const signup_mailpass=async (email,password)=>{
         try {
@@ -101,7 +128,7 @@ export const FirebaseProvider=({children})=>{
 
 
     return (
-        <Firebasecontext.Provider value={{name,setname, signup_mailpass, login_mailpass, login_google, isLoggedIn, currUser, logout}} >
+        <Firebasecontext.Provider value={{name,setname, signup_mailpass, login_mailpass, login_google, isLoggedIn, currUser, logout, createNewList}} >
             {children}
 
         </Firebasecontext.Provider>
